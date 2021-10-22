@@ -14,9 +14,9 @@ namespace WebAddressbookTests
     public class NavigationHelper : HelperBase
     {
 
-        private string baseURL;
+        protected string baseURL;
 
-        public NavigationHelper(IWebDriver driver, string baseURL) : base(driver)
+        public NavigationHelper(ApplicationManager manager, string baseURL) : base(manager)
         {
             this.baseURL = baseURL;
         }
@@ -34,6 +34,11 @@ namespace WebAddressbookTests
         public void OpenGroupPage()
         {
             driver.FindElement(By.CssSelector("#nav > ul > li.admin")).Click();
+        }
+
+        public void InitContactCreation()
+        {
+            driver.FindElement(By.LinkText("add new")).Click();
         }
     }
 }
