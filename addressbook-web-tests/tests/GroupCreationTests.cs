@@ -15,15 +15,14 @@ namespace WebAddressbookTests
             GroupData group = new GroupData("group");
             group.Header = "group";
             group.Footer = "group";
-
-            OpenHomePage();
-            Login(new AccountData("admin", "secret"));
-            OpenGroupPage();
-            InitGroupCreation();
-            FillGroupForm(group);
-            SubmitGroupCreation();
-            ReturnToGroupsPage();
-            Logout();
+            app.Navigation.OpenHomePage();
+            app.Auth.Login(new AccountData("admin", "secret"));
+            app.Navigation.OpenGroupPage();
+            app.Group.InitGroupCreation();
+            app.Group.FillGroupForm(group);
+            app.Group.SubmitGroupCreation();
+            app.Group.ReturnToGroupsPage();
+            app.Auth.Logout();
         }
     }
 }
