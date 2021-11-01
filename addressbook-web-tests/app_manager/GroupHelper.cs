@@ -34,6 +34,29 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public GroupHelper UpdateByIndex(GroupData group, int index)
+        {
+            manager.Navigation.OpenGroupPage();
+            index += 4;
+            driver.FindElement(By.CssSelector(String.Format("span:nth-child({0})", index))).Click();
+            driver.FindElement(By.CssSelector("input[type=submit]:nth-child(3)")).Click();
+            FillGroupForm(group);
+            driver.FindElement(By.Name("update")).Click();
+            ReturnToGroupsPage();
+            return this;
+        }
+
+        public GroupHelper DeleteByIndex(int index)
+        {
+            manager.Navigation.OpenGroupPage();
+            index += 4;
+            driver.FindElement(By.CssSelector(String.Format("span:nth-child({0})", index))).Click();
+            driver.FindElement(By.CssSelector("input[type=submit]:nth-child(2)")).Click();
+            ReturnToGroupsPage();
+            return this;
+        }
+
+
         public GroupHelper FillGroupForm(GroupData group)
         {
             driver.FindElement(By.Name("group_name")).Clear();

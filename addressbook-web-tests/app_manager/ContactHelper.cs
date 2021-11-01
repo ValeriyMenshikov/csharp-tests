@@ -26,6 +26,25 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper UpdateByIndex(ContactData contact, int index)
+        {
+            index += 1;
+            driver.FindElement(By.CssSelector(String.Format("tr:nth-child({0}) > td:nth-child(8)", index))).Click();
+            FillContactForm(contact);
+            driver.FindElement(By.Name("update")).Click();
+            manager.Navigation.GoToHomePage();
+            return this;
+        }
+
+        public ContactHelper DeleteByIndex(int index)
+        {
+            index += 1;
+            driver.FindElement(By.CssSelector(String.Format("tr:nth-child({0}) > td:nth-child(1)", index))).Click();
+            driver.FindElement(By.CssSelector("div:nth-child(8)")).Click();
+            driver.SwitchTo().Alert().Accept();
+            return this;
+        }
+
         public ContactHelper FillContactForm(ContactData contact)
         {
             driver.FindElement(By.Name("firstname")).Click();

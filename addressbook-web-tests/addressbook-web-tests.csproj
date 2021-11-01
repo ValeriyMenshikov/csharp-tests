@@ -72,6 +72,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="tests\GroupCreationTests.cs" />
     <Compile Include="tests\ContactCreationTests.cs" />
+    <Compile Include="tests\ContactUpdateTests.cs" />
+    <Compile Include="tests\ContactDeleteTests.cs" />
+    <Compile Include="tests\GroupUpdateTests.cs" />
+    <Compile Include="tests\GroupDeleteTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
