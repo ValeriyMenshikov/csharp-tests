@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class GroudUpdateTests : TestBase
+    public class GroudUpdateTests : AuthTestBase
     {
         [Test]
         public void GroupUpdateTest()

@@ -28,11 +28,19 @@ namespace WebAddressbookTests
 
         public void OpenHomePage()
         {
+            if (driver.Url == baseURL)
+            {
+                return;
+            }
             driver.Navigate().GoToUrl(baseURL);
         }
 
         public void OpenGroupPage()
         {
+            if (driver.Url == baseURL + "/group.php" && IsElementPresent(By.Name("new")))
+            {
+                return;
+            }
             driver.FindElement(By.CssSelector("#nav > ul > li.admin")).Click();
         }
 
