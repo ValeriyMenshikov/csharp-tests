@@ -56,6 +56,16 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public bool CheckGroups()
+        {
+            manager.Navigation.OpenGroupPage();
+            if (driver.FindElements(By.CssSelector("input[type=checkbox]")).Count() != 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
 
         public GroupHelper FillGroupForm(GroupData group)
         {

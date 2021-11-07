@@ -9,8 +9,12 @@ namespace WebAddressbookTests
         [Test]
         public void ContactUpdateByIndexTest()
         {
-            ContactData contact = new ContactData("2", "3");
             int index = 1;
+            if (app.Contact.CheckContacts() == false)
+            {
+                app.Contact.Create(new ContactData("firstname", "middlename"));
+            }
+            ContactData contact = new ContactData("2", "3");
             app.Contact.UpdateByIndex(contact, index);
         }
     }

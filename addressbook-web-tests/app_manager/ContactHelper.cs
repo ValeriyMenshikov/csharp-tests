@@ -37,6 +37,16 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public bool CheckContacts()
+        {
+            manager.Navigation.OpenHomePage();
+            if (driver.FindElements(By.Name("selected[]")).Count() != 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public ContactHelper DeleteByIndex(int index)
         {
             index += 1;
