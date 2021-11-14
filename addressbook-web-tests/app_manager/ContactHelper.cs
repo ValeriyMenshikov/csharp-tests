@@ -28,7 +28,7 @@ namespace WebAddressbookTests
 
         public ContactHelper UpdateByIndex(ContactData contact, int index)
         {
-            index += 1;
+            index += 2;
             manager.Navigation.OpenHomePage();
             driver.FindElement(By.CssSelector(String.Format("tr:nth-child({0}) > td:nth-child(8)", index))).Click();
             FillContactForm(contact);
@@ -47,9 +47,35 @@ namespace WebAddressbookTests
             return false;
         }
 
+        public List<ContactData> GetContactList()
+        {
+            List<ContactData> groups = new List<ContactData>();
+            manager.Navigation.OpenHomePage();
+            List<IWebElement> elements = driver.FindElements(By.CssSelector("tr")).ToList();
+            List<List<IWebElement>> cells = new List<List<IWebElement>>();
+
+            for (int index = 1; index <= elements.Count - 1; index++)
+            {
+                cells.Add(elements[index].FindElements(By.TagName("td")).ToList());
+            }
+
+            List<ContactData> contacts = new List<ContactData>();
+            foreach (var cell in cells)
+            {
+                string name = cell[0].FindElement(By.TagName("input")).GetAttribute("value");
+                string lastname = cell[1].Text.Trim();
+                string firstname = cell[2].Text.Trim();
+                // string address = cell[3].Text.Trim();
+                // string all_emails = cell[4].Text.Trim();
+                // string all_phones = cell[5].Text.Trim();
+                contacts.Add(new ContactData(firstname, name, lastname));
+            }
+            return contacts;
+        }
+
         public ContactHelper DeleteByIndex(int index)
         {
-            index += 1;
+            index += 2;
             driver.FindElement(By.CssSelector(String.Format("tr:nth-child({0}) > td:nth-child(1)", index))).Click();
             driver.FindElement(By.CssSelector("div:nth-child(8)")).Click();
             driver.SwitchTo().Alert().Accept();
