@@ -116,15 +116,11 @@ namespace WebAddressbookTests
 
         public int CompareTo(ContactData other)
         {
-            if (Object.ReferenceEquals(other, null))
+            if (Object.ReferenceEquals(other, null) || this.Id == null)
             {
                 return 1;
             }
-
-            if (this.Id == null)
-            {
-                return 1;
-            }
+            
             if (other.Id == null)
             {
                 return -1;
@@ -138,6 +134,7 @@ namespace WebAddressbookTests
             {
                 return -1;
             }
+
             return Id.CompareTo(other.Id);
         }
     }

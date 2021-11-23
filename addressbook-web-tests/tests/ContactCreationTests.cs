@@ -21,17 +21,6 @@ namespace WebAddressbookTests
             oldContacts.Add(contact);
             oldContacts.Sort();
             newContacts.Sort();
-            foreach (var item in oldContacts)
-            {
-                System.Console.WriteLine(item);
-            }
-
-            System.Console.WriteLine("==============");
-
-            foreach (var item in newContacts)
-            {
-                System.Console.WriteLine(item);
-            }
             Assert.AreEqual(oldContacts, newContacts);
         }
 

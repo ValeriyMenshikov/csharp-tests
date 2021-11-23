@@ -79,16 +79,16 @@ namespace WebAddressbookTests
 
                 foreach (var cell in cells)
                 {
-                    string lastname = cell[1].Text.Trim();
-                    string firstname = cell[2].Text.Trim();
                     // string address = cell[3].Text.Trim();
                     // string all_emails = cell[4].Text.Trim();
                     // string all_phones = cell[5].Text.Trim();
                     ;
-                    contactsCache.Add(new ContactData(firstname, lastname)
+                    contactsCache.Add(new ContactData()
                     {
-                        Id = cell[0].FindElement(By.TagName("input")).GetAttribute("value")
-                    } );
+                        Id = cell[0].FindElement(By.TagName("input")).GetAttribute("value"),
+                        Lastname = cell[1].Text.Trim(),
+                        Firstname = cell[2].Text.Trim()
+                    });
                 }
 
             }
