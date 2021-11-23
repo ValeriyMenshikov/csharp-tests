@@ -32,9 +32,15 @@ namespace WebAddressbookTests
             manager.Navigation.OpenHomePage();
             driver.FindElement(By.CssSelector(String.Format("tr:nth-child({0}) > td:nth-child(8)", index))).Click();
             FillContactForm(contact);
-            driver.FindElement(By.Name("update")).Click();
+            SubmitGroupUpdate();
             manager.Navigation.GoToHomePage();
             return this;
+        }
+
+        private void SubmitGroupUpdate()
+        {
+            driver.FindElement(By.Name("update")).Click();
+            contactsCache = null;
         }
 
         public bool CheckContacts()
@@ -47,30 +53,46 @@ namespace WebAddressbookTests
             return false;
         }
 
+
+        public int GetContactsCount()
+        {
+            manager.Navigation.OpenHomePage();
+            return driver.FindElements(By.Name("selected[]")).Count();
+        }
+
+        private List<ContactData> contactsCache = null;
+
         public List<ContactData> GetContactList()
         {
-            List<ContactData> groups = new List<ContactData>();
-            manager.Navigation.OpenHomePage();
-            List<IWebElement> elements = driver.FindElements(By.CssSelector("tr")).ToList();
-            List<List<IWebElement>> cells = new List<List<IWebElement>>();
-
-            for (int index = 1; index <= elements.Count - 1; index++)
+            if (contactsCache == null)
             {
-                cells.Add(elements[index].FindElements(By.TagName("td")).ToList());
-            }
+                contactsCache = new List<ContactData>();
+                manager.Navigation.OpenHomePage();
 
-            List<ContactData> contacts = new List<ContactData>();
-            foreach (var cell in cells)
-            {
-                string name = cell[0].FindElement(By.TagName("input")).GetAttribute("value");
-                string lastname = cell[1].Text.Trim();
-                string firstname = cell[2].Text.Trim();
-                // string address = cell[3].Text.Trim();
-                // string all_emails = cell[4].Text.Trim();
-                // string all_phones = cell[5].Text.Trim();
-                contacts.Add(new ContactData(firstname, name, lastname));
+                List<IWebElement> elements = driver.FindElements(By.CssSelector("tr")).ToList();
+                List<List<IWebElement>> cells = new List<List<IWebElement>>();
+
+                for (int index = 1; index <= elements.Count - 1; index++)
+                {
+                    cells.Add(elements[index].FindElements(By.TagName("td")).ToList());
+                }
+
+                foreach (var cell in cells)
+                {
+                    string lastname = cell[1].Text.Trim();
+                    string firstname = cell[2].Text.Trim();
+                    // string address = cell[3].Text.Trim();
+                    // string all_emails = cell[4].Text.Trim();
+                    // string all_phones = cell[5].Text.Trim();
+                    ;
+                    contactsCache.Add(new ContactData(firstname, lastname)
+                    {
+                        Id = cell[0].FindElement(By.TagName("input")).GetAttribute("value")
+                    } );
+                }
+
             }
-            return contacts;
+            return new List<ContactData>(contactsCache);
         }
 
         public ContactHelper DeleteByIndex(int index)
@@ -79,6 +101,8 @@ namespace WebAddressbookTests
             driver.FindElement(By.CssSelector(String.Format("tr:nth-child({0}) > td:nth-child(1)", index))).Click();
             driver.FindElement(By.CssSelector("div:nth-child(8)")).Click();
             driver.SwitchTo().Alert().Accept();
+            manager.Navigation.OpenHomePage();
+            contactsCache = null;
             return this;
         }
 
@@ -123,6 +147,7 @@ namespace WebAddressbookTests
         public ContactHelper SubmitContactCreation()
         {
             driver.FindElement(By.Name("submit")).Click();
+            contactsCache = null;
             return this;
         }
 

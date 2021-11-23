@@ -19,11 +19,17 @@ namespace WebAddressbookTests
                 app.Group.Create(group);
             }
             List<GroupData> oldGroups = app.Group.GetGroupList();
+            GroupData toBeRemoved = oldGroups[0];
             app.Group.DeleteByIndex(index);
+            Assert.AreEqual(oldGroups.Count - 1, app.Group.GetGroupsCount());
             List<GroupData> newGroups = app.Group.GetGroupList();
             
             oldGroups.RemoveAt(index);
             Assert.AreEqual(oldGroups, newGroups);
+            foreach (GroupData group in newGroups)
+            {
+                Assert.AreNotEqual(group.Id, toBeRemoved.Id);
+            }
         }
     }
 }

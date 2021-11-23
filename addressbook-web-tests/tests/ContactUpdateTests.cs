@@ -16,28 +16,32 @@ namespace WebAddressbookTests
                 app.Contact.Create(new ContactData("Петров", "Иван ", "Сергеевич"));
             }
             ContactData contact = new ContactData("Петя", "Сергеевич", "Петров");
-            List<ContactData> oldContacts = app.Contact.GetContactList();
-            app.Contact.UpdateByIndex(contact, index);
-            List<ContactData> newContacts = app.Contact.GetContactList();
-            oldContacts[0].Firstname = contact.Firstname;
-            oldContacts[0].Middlename = contact.Middlename;
-            oldContacts[0].Lastname = contact.Lastname;
-            oldContacts.Sort();
-            foreach (var item in oldContacts)
-            {
-                System.Console.WriteLine(item);
-            }
-            newContacts.Sort();
             
-            System.Console.WriteLine("----------");
+            List<ContactData> oldContacts = app.Contact.GetContactList();
+            
+            ContactData oldData = oldContacts[index];
 
-            foreach (var item in newContacts)
-            {
-                System.Console.WriteLine(item);
-            }
+            app.Contact.UpdateByIndex(contact, index);
+            
+            Assert.AreEqual(oldContacts.Count, app.Contact.GetContactsCount());
 
+            List<ContactData> newContacts = app.Contact.GetContactList();
+
+            oldContacts[index].Firstname = contact.Firstname;
+            oldContacts[index].Middlename = contact.Middlename;
+            oldContacts[index].Lastname = contact.Lastname;
+            oldContacts.Sort();
+            newContacts.Sort();
 
             Assert.AreEqual(oldContacts, newContacts);
+            foreach (ContactData g in newContacts)
+            {
+                if (g.Id == oldData.Id)
+                {
+                    Assert.AreEqual(g.Firstname, contact.Firstname);
+                    Assert.AreEqual(g.Lastname, contact.Lastname);
+                }
+            }
         }
     }
 }

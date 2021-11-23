@@ -8,9 +8,9 @@ namespace WebAddressbookTests
 {
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
-        public ContactData(string firstname,
-                           string middlename,
+        public ContactData(string firstname = null,
                            string lastname = null,
+                           string middlename = null,
                            string nickname = null,
                            string title = null,
                            string company = null,
@@ -31,8 +31,10 @@ namespace WebAddressbookTests
                            string ayear = null,
                            string address2 = null,
                            string phone2 = null,
+                           string id = null,
                            string notes = null)
         {
+            Id = id;
             Firstname = firstname;
             Middlename = middlename;
             Lastname = lastname;
@@ -59,6 +61,7 @@ namespace WebAddressbookTests
             Notes = notes;
         }
 
+        public string Id { get; set; }
         public string Firstname { get; set; }
         public string Middlename { get; set; }
         public string Lastname { get; set; }
@@ -103,12 +106,12 @@ namespace WebAddressbookTests
 
         public override int GetHashCode()
         {
-            return (Firstname + Lastname).GetHashCode();
+            return Firstname.GetHashCode() ^ Lastname.GetHashCode();
         }
 
         public override string ToString()
         {
-            return String.Format("Firstname={0}, Lastname={1}", Firstname, Lastname);
+            return String.Format("Id={0}, Firstname={1}, Lastname={2}", Id, Firstname, Lastname);
         }
 
         public int CompareTo(ContactData other)
@@ -117,7 +120,25 @@ namespace WebAddressbookTests
             {
                 return 1;
             }
-            return Firstname.CompareTo(other.Firstname) == 0 ? Lastname.CompareTo(other.Lastname) : Firstname.CompareTo(other.Firstname);
+
+            if (this.Id == null)
+            {
+                return 1;
+            }
+            if (other.Id == null)
+            {
+                return -1;
+            }
+
+            if (this.Id.Length > other.Id.Length)
+            {
+                return 1;
+            }
+            else if (this.Id.Length < other.Id.Length)
+            {
+                return -1;
+            }
+            return Id.CompareTo(other.Id);
         }
     }
 }

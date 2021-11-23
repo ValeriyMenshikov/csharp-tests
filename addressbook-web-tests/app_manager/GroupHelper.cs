@@ -28,9 +28,11 @@ namespace WebAddressbookTests
             return this;
         }
 
+
         public GroupHelper SubmitGroupCreation()
         {
             driver.FindElement(By.Name("submit")).Click();
+            groupCache = null;
             return this;
         }
 
@@ -41,9 +43,21 @@ namespace WebAddressbookTests
             driver.FindElement(By.CssSelector(String.Format("span:nth-child({0}) > input[type=checkbox]", index))).Click();
             driver.FindElement(By.CssSelector("input[type=submit]:nth-child(3)")).Click();
             FillGroupForm(group);
-            driver.FindElement(By.Name("update")).Click();
+            SubmitGroupUpdate();
             ReturnToGroupsPage();
             return this;
+
+        }
+
+        public void SubmitGroupUpdate()
+        {
+            driver.FindElement(By.Name("update")).Click();
+            groupCache = null;
+        }
+
+        public int GetGroupsCount()
+        {
+            return driver.FindElements(By.CssSelector("span.group")).Count;
         }
 
         public GroupHelper DeleteByIndex(int index)
@@ -51,9 +65,15 @@ namespace WebAddressbookTests
             manager.Navigation.OpenGroupPage();
             index += 5;
             driver.FindElement(By.CssSelector(String.Format("span:nth-child({0}) > input[type=checkbox]", index))).Click();
-            driver.FindElement(By.CssSelector("input[type=submit]:nth-child(2)")).Click();
+            SubmitGroupDelete();
             ReturnToGroupsPage();
             return this;
+        }
+
+        private void SubmitGroupDelete()
+        {
+            driver.FindElement(By.CssSelector("input[type=submit]:nth-child(2)")).Click();
+            groupCache = null;
         }
 
         public bool CheckGroups()
@@ -66,16 +86,25 @@ namespace WebAddressbookTests
             return false;
         }
 
+        private List<GroupData> groupCache = null;
+
         public List<GroupData> GetGroupList()
         {
-            List<GroupData> groups = new List<GroupData>();
-            manager.Navigation.OpenGroupPage();
-            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
-            foreach (IWebElement element in elements)
+            if (groupCache == null)
             {
-                groups.Add(new GroupData(element.Text));
+                groupCache = new List<GroupData>();
+                manager.Navigation.OpenGroupPage();
+                ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
+                foreach (IWebElement element in elements)
+                {
+                    GroupData group = new GroupData(element.Text)
+                    {
+                        Id = element.FindElement(By.TagName("input")).GetAttribute("value")
+                    };
+                    groupCache.Add(group);
+                }
             }
-            return groups;
+            return new List<GroupData>(groupCache);
         }
 
         public GroupHelper FillGroupForm(GroupData group)
