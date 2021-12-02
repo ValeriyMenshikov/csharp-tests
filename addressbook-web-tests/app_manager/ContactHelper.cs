@@ -30,19 +30,61 @@ namespace WebAddressbookTests
             InitContactModification(index);
             string firstName = driver.FindElement(By.Name("firstname")).GetAttribute("value");
             string lastName = driver.FindElement(By.Name("lastname")).GetAttribute("value");
+            string middleName = driver.FindElement(By.Name("middlename")).GetAttribute("value");
             string address = driver.FindElement(By.Name("address")).GetAttribute("value");
             string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
             string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
             string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+            string email = driver.FindElement(By.Name("email")).GetAttribute("value");
+            string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
+            string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
             return new ContactData()
             {
                 Firstname = firstName,
                 Lastname = lastName,
+                Middlename = middleName,
                 Address = address,
                 Home = homePhone,
                 Mobile = mobilePhone,
-                Work = workPhone
+                Work = workPhone,
+                Email = email,
+                Email2 = email2,
+                Email3 = email3
             };
+        }
+
+        public ContactData GetContactInformationFromViewPage(int index)
+        {
+            manager.Navigation.OpenHomePage();
+            ViewContactByIndex(index);
+            string text = driver.FindElement(By.Id("content")).Text;
+            string fmlAddress = new Regex(@"^.*H:", RegexOptions.Singleline).Match(text).Value.Replace("H:", "");
+            string homePhone = new Regex(@"H: (.*)").Match(text).Groups[1].Value.Trim();
+            string mobilePhone = new Regex(@"M: (.*)").Match(text).Groups[1].Value.Trim();
+            string workPhone = new Regex(@"W: (.*)").Match(text).Groups[1].Value.Trim();
+            string secondaryPhone = new Regex(@"P: (.*)").Match(text).Groups[1].Value.Trim();
+            IList<IWebElement> emails = driver.FindElements(By.CssSelector("#content > a"));
+            string allEmails = ""; 
+            foreach (IWebElement item in emails)
+            {
+                allEmails += item.Text + "\r\n";
+            }
+            return new ContactData()
+            {
+                Home = homePhone,
+                Mobile = mobilePhone,
+                Work = workPhone,
+                Phone2 = secondaryPhone,
+                AllEmails = allEmails.Trim(),
+                FMLAddress = fmlAddress
+            };
+        }
+
+        private void ViewContactByIndex(int index)
+        {
+            index += 2;
+            manager.Navigation.OpenHomePage();
+            driver.FindElement(By.CssSelector(String.Format("tr:nth-child({0}) > td:nth-child(7)", index))).Click();
         }
 
         public ContactHelper Create(ContactData contact)
@@ -128,7 +170,7 @@ namespace WebAddressbookTests
                 Firstname = cell[2].Text.Trim(),
                 Address = cell[3].Text.Trim(),
                 AllEmails = cell[4].Text.Trim(),
-                AllPhones = cell[5].Text.Trim()
+                AllPhones = cell[5].Text.Trim().Replace("+", "")
             };
         }
 

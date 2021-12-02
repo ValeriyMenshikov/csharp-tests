@@ -11,6 +11,7 @@ namespace WebAddressbookTests
     {
         private string allPhones;
         private string allEmails;
+        private string fmlAddress;
 
         public ContactData(string firstname = null,
                            string lastname = null,
@@ -91,6 +92,25 @@ namespace WebAddressbookTests
         public string Phone2 { get; set; }
         public string Notes { get; set; }
 
+        public string FMLAddress 
+        {
+            get
+            {
+                if (fmlAddress != null)
+                {
+                    return Regex.Replace(fmlAddress, @"[ ]", "\r\n").Trim();
+                }
+                else
+                {
+                    return (CleanUp(Firstname) + CleanUp(Middlename) + CleanUp(Lastname) + CleanUp(Address)).Trim();
+                }
+            }
+            set
+            {
+                fmlAddress = value;
+            }
+        }
+
         public string AllEmails
         {
             get
@@ -101,7 +121,7 @@ namespace WebAddressbookTests
                 }
                 else
                 {
-                    return (CleanUp(Home) + CleanUp(Mobile) + CleanUp(Work)).Trim();
+                    return (CleanUp(Email) + CleanUp(Email2) + CleanUp(Email3)).Trim();
                 }
             }
             set
@@ -129,13 +149,14 @@ namespace WebAddressbookTests
             }
         }
 
-        private string CleanUp(string phone)
+
+        private string CleanUp(string value)
         {
-            if (phone == null || phone == "")
+            if (value == null || value == "")
             {
                 return "";
             }
-            return Regex.Replace(phone, "[ ()-/.]", "") + "\r\n";
+            return Regex.Replace(value, @"[ +()-]", "") + "\r\n";
         }
 
         public bool Equals(ContactData other)
