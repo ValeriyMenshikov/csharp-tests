@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace WebAddressbookTests
 {
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
+        private string allPhones;
+        private string allEmails;
+
         public ContactData(string firstname = null,
                            string lastname = null,
                            string middlename = null,
@@ -87,6 +91,53 @@ namespace WebAddressbookTests
         public string Phone2 { get; set; }
         public string Notes { get; set; }
 
+        public string AllEmails
+        {
+            get
+            {
+                if (allEmails != null)
+                {
+                    return allEmails;
+                }
+                else
+                {
+                    return (CleanUp(Home) + CleanUp(Mobile) + CleanUp(Work)).Trim();
+                }
+            }
+            set
+            {
+                allEmails = value;
+            }
+        }
+
+        public string AllPhones
+        {
+            get
+            {
+                if (allPhones != null)
+                {
+                    return allPhones;
+                }
+                else
+                {
+                    return (CleanUp(Home) + CleanUp(Mobile) + CleanUp(Work)).Trim();
+                }
+            }
+            set
+            {
+                allPhones = value;
+            }
+        }
+
+        private string CleanUp(string phone)
+        {
+            if (phone == null || phone == "")
+            {
+                return "";
+            }
+            return Regex.Replace(phone, "[ ()-/.]", "") + "\r\n";
+        }
+
         public bool Equals(ContactData other)
         {
             if (Object.ReferenceEquals(other, null))
@@ -120,7 +171,7 @@ namespace WebAddressbookTests
             {
                 return 1;
             }
-            
+
             if (other.Id == null)
             {
                 return -1;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Chrome;
@@ -17,6 +18,33 @@ namespace WebAddressbookTests
         {
         }
 
+        public ContactData GetContactInformationFromTable(int index)
+        {
+            IList<IWebElement> cells = driver.FindElements(By.Name("entry"))[index].FindElements(By.TagName("td"));
+            return ExtractFields(cells);
+        }
+
+        public ContactData GetContactInformationFromEditForm(int index)
+        {
+            manager.Navigation.OpenHomePage();
+            InitContactModification(index);
+            string firstName = driver.FindElement(By.Name("firstname")).GetAttribute("value");
+            string lastName = driver.FindElement(By.Name("lastname")).GetAttribute("value");
+            string address = driver.FindElement(By.Name("address")).GetAttribute("value");
+            string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
+            string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
+            string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+            return new ContactData()
+            {
+                Firstname = firstName,
+                Lastname = lastName,
+                Address = address,
+                Home = homePhone,
+                Mobile = mobilePhone,
+                Work = workPhone
+            };
+        }
+
         public ContactHelper Create(ContactData contact)
         {
             manager.Navigation.InitContactCreation();
@@ -28,13 +56,18 @@ namespace WebAddressbookTests
 
         public ContactHelper UpdateByIndex(ContactData contact, int index)
         {
-            index += 2;
             manager.Navigation.OpenHomePage();
-            driver.FindElement(By.CssSelector(String.Format("tr:nth-child({0}) > td:nth-child(8)", index))).Click();
+            InitContactModification(index);
             FillContactForm(contact);
             SubmitGroupUpdate();
             manager.Navigation.GoToHomePage();
             return this;
+        }
+
+        private void InitContactModification(int index)
+        {
+            index += 2;
+            driver.FindElement(By.CssSelector(String.Format("tr:nth-child({0}) > td:nth-child(8)", index))).Click();
         }
 
         private void SubmitGroupUpdate()
@@ -79,20 +112,24 @@ namespace WebAddressbookTests
 
                 foreach (var cell in cells)
                 {
-                    // string address = cell[3].Text.Trim();
-                    // string all_emails = cell[4].Text.Trim();
-                    // string all_phones = cell[5].Text.Trim();
-                    ;
-                    contactsCache.Add(new ContactData()
-                    {
-                        Id = cell[0].FindElement(By.TagName("input")).GetAttribute("value"),
-                        Lastname = cell[1].Text.Trim(),
-                        Firstname = cell[2].Text.Trim()
-                    });
+                    contactsCache.Add(ExtractFields(cell));
                 }
 
             }
             return new List<ContactData>(contactsCache);
+        }
+
+        public ContactData ExtractFields(IList<IWebElement> cell)
+        {
+            return new ContactData()
+            {
+                Id = cell[0].FindElement(By.TagName("input")).GetAttribute("value"),
+                Lastname = cell[1].Text.Trim(),
+                Firstname = cell[2].Text.Trim(),
+                Address = cell[3].Text.Trim(),
+                AllEmails = cell[4].Text.Trim(),
+                AllPhones = cell[5].Text.Trim()
+            };
         }
 
         public ContactHelper DeleteByIndex(int index)
@@ -149,6 +186,14 @@ namespace WebAddressbookTests
             driver.FindElement(By.Name("submit")).Click();
             contactsCache = null;
             return this;
+        }
+
+        public int GetNumberOfSearchResults()
+        {
+            manager.Navigation.OpenHomePage();
+            string text = driver.FindElement(By.TagName("label")).Text;
+            Match m = new Regex(@"\d+").Match(text);
+            return Int32.Parse(m.Value);
         }
 
     }
