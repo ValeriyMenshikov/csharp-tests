@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -34,7 +35,24 @@ namespace WebAddressbookTests
         }
 
 
-        [Test, TestCaseSource("RandomGroupDataProvider")]
+        public static IEnumerable<GroupData> GroupDataFromFile() 
+        {
+            List<GroupData> groups = new List<GroupData>();
+            string[] lines = File.ReadAllLines(@"groups.csv");
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split(",".ToCharArray());
+                groups.Add(new GroupData(parts[0])
+                {
+                    Header = parts[1],
+                    Footer = parts[2]
+                });
+            }
+            return groups;
+        }
+
+
+        [Test, TestCaseSource("GroupDataFromFile")]
         public void GroupCreationTest(GroupData group)
         {
             List<GroupData> oldGroups = app.Group.GetGroupList();
