@@ -28,9 +28,7 @@ namespace WebAddressbookTests
             int index = 0;
             ContactData fromViewPage = app.Contact.GetContactInformationFromViewPage(index);
             ContactData fromForm = app.Contact.GetContactInformationFromEditForm(index);
-            Assert.AreEqual(fromViewPage.FMLAddress, fromForm.FMLAddress);
-            Assert.AreEqual(fromViewPage.AllPhones, fromForm.AllPhones);
-            Assert.AreEqual(fromViewPage.AllEmails, fromForm.AllEmails);
+            Assert.AreEqual(fromViewPage.ContactDetails, fromForm.ContactDetails);
         }
     }
 }

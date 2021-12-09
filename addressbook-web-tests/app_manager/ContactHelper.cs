@@ -31,52 +31,236 @@ namespace WebAddressbookTests
             string firstName = driver.FindElement(By.Name("firstname")).GetAttribute("value");
             string lastName = driver.FindElement(By.Name("lastname")).GetAttribute("value");
             string middleName = driver.FindElement(By.Name("middlename")).GetAttribute("value");
+            string nickName = driver.FindElement(By.Name("nickname")).GetAttribute("value");
+            string title = driver.FindElement(By.Name("title")).GetAttribute("value");
+            string company = driver.FindElement(By.Name("company")).GetAttribute("value");
             string address = driver.FindElement(By.Name("address")).GetAttribute("value");
             string homePhone = driver.FindElement(By.Name("home")).GetAttribute("value");
             string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("value");
             string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
+            string fax = driver.FindElement(By.Name("fax")).GetAttribute("value");
             string email = driver.FindElement(By.Name("email")).GetAttribute("value");
             string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
             string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
+            string homePage = driver.FindElement(By.Name("homepage")).GetAttribute("value");
+            string bDay = driver.FindElement(By.Name("bday")).GetAttribute("value");
+            string bMonth = driver.FindElement(By.Name("bmonth")).GetAttribute("value");
+            string bYear = driver.FindElement(By.Name("byear")).GetAttribute("value");
+            string aDay = driver.FindElement(By.Name("aday")).GetAttribute("value");
+            string aMonth = driver.FindElement(By.Name("amonth")).GetAttribute("value");
+            string aYear = driver.FindElement(By.Name("ayear")).GetAttribute("value");
+            string address2 = driver.FindElement(By.Name("address2")).GetAttribute("value");
+            string phone2 = driver.FindElement(By.Name("phone2")).GetAttribute("value");
+            string notes = driver.FindElement(By.Name("notes")).GetAttribute("value");
+            string contactDetails = CleanAndConcat(firstName,
+                                                    middleName,
+                                                    lastName,
+                                                    nickName,
+                                                    title,
+                                                    company,
+                                                    address,
+                                                    homePhone,
+                                                    mobilePhone,
+                                                    workPhone,
+                                                    fax,
+                                                    email,
+                                                    email2,
+                                                    email3,
+                                                    homePage,
+                                                    bDay,
+                                                    bMonth,
+                                                    bYear,
+                                                    aDay,
+                                                    aMonth,
+                                                    aYear,
+                                                    address2,
+                                                    phone2,
+                                                    notes);
+
             return new ContactData()
             {
                 Firstname = firstName,
                 Lastname = lastName,
                 Middlename = middleName,
+                Nickname = nickName,
+                Title = title,
+                Company = company,
                 Address = address,
                 Home = homePhone,
                 Mobile = mobilePhone,
                 Work = workPhone,
+                Fax = fax,
                 Email = email,
                 Email2 = email2,
-                Email3 = email3
+                Email3 = email3,
+                Homepage = homePage,
+                Bday = bDay,
+                Bmonth = bMonth,
+                Byear = bYear,
+                Aday = aDay,
+                Amonth = aMonth,
+                Ayear = aYear,
+                Address2 = address2,
+                Phone2 = phone2,
+                Notes = notes,
+                ContactDetails = contactDetails,
             };
         }
+
+        private static string CleanAndConcat(string firstName,
+                                            string middleName,
+                                            string lastName,
+                                            string nickName,
+                                            string title,
+                                            string company,
+                                            string address,
+                                            string homePhone,
+                                            string mobilePhone,
+                                            string workPhone,
+                                            string fax,
+                                            string email,
+                                            string email2,
+                                            string email3,
+                                            string homePage,
+                                            string bDay,
+                                            string bMonth,
+                                            string bYear,
+                                            string aDay,
+                                            string aMonth,
+                                            string aYear,
+                                            string address2,
+                                            string phone2,
+                                            string notes)
+        {
+            string ContactDetails = "";
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                ContactDetails += firstName;
+            }
+            if (!string.IsNullOrEmpty(middleName))
+            {
+                ContactDetails += ' ' + middleName;
+            }
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                ContactDetails += ' ' + lastName;
+            }
+            if (!string.IsNullOrEmpty(nickName))
+            {
+                ContactDetails += "\r\n" + nickName;
+            }
+            if (!string.IsNullOrEmpty(title))
+            {
+                ContactDetails += "\r\n" + title;
+            }
+            if (!string.IsNullOrEmpty(company))
+            {
+                ContactDetails += "\r\n" + company;
+            }
+            if (!string.IsNullOrEmpty(address))
+            {
+                ContactDetails += "\r\n" + address;
+            }
+            if (!string.IsNullOrEmpty(homePhone))
+            {
+                ContactDetails += "\r\n\r\nH: " + homePhone;
+            }
+            if (!string.IsNullOrEmpty(mobilePhone))
+            {
+                ContactDetails += "\r\nM: " + mobilePhone;
+            }
+            if (!string.IsNullOrEmpty(workPhone))
+            {
+                ContactDetails += "\r\nW: " + workPhone;
+            }
+            if (!string.IsNullOrEmpty(fax))
+            {
+                ContactDetails += "\r\nF: " + fax;
+            }
+            if (!string.IsNullOrEmpty(email))
+            {
+                ContactDetails += "\r\n\r\n" + email;
+            }
+            if (!string.IsNullOrEmpty(email2))
+            {
+                ContactDetails += "\r\n" + email2;
+            }
+            if (!string.IsNullOrEmpty(email3))
+            {
+                ContactDetails += "\r\n" + email3;
+            }
+            if (!string.IsNullOrEmpty(homePage))
+            {
+                ContactDetails += "\r\nHomepage:\r\n" + homePage;
+            }
+            if (bDay != "0" || bMonth != "-" || !string.IsNullOrEmpty(bYear))
+            {
+                string age = CalculateAge(bYear);
+                ContactDetails += "\r\n\r\n" + "Birthday " + (bDay == "0" ? "" : bDay + ". ") + (bMonth == "-" ? "" : bMonth + " ") + bYear + string.Format(" ({0})", age);
+            }
+            if (aDay != "0" || aMonth != "-" || !string.IsNullOrEmpty(aYear))
+            {
+                string age = CalculateAge(aYear);
+                ContactDetails += "\r\n" + "Anniversary " + (aDay == "0" ? "" : aDay + ". ") + (aMonth == "-" ? "" : aMonth + " ") + aYear + string.Format(" ({0})", age);
+            }
+            if (address2 != "")
+            {
+                ContactDetails += "\r\n\r\n" + address2;
+            }
+            if (phone2 != "")
+            {
+                ContactDetails += "\r\n\r\nP: " + phone2;
+            }
+            if (notes != "")
+            {
+                ContactDetails += "\r\n\r\n" + notes;
+            }
+
+            return ContactDetails.Trim();
+        }
+
+        private static string CalculateAge(string year)
+        {
+            int age = DateTime.Now.Year - Convert.ToInt32(year);
+            
+            return age.ToString();
+        }
+
+        /*        public ContactData GetContactInformationFromViewPage(int index)
+                {
+                    manager.Navigation.OpenHomePage();
+                    ViewContactByIndex(index);
+                    string text = driver.FindElement(By.Id("content")).Text;
+                    string fmlAddress = new Regex(@"^.*H:", RegexOptions.Singleline).Match(text).Value.Replace("H:", "");
+                    string homePhone = new Regex(@"H: (.*)").Match(text).Groups[1].Value.Trim();
+                    string mobilePhone = new Regex(@"M: (.*)").Match(text).Groups[1].Value.Trim();
+                    string workPhone = new Regex(@"W: (.*)").Match(text).Groups[1].Value.Trim();
+                    string secondaryPhone = new Regex(@"P: (.*)").Match(text).Groups[1].Value.Trim();
+                    IList<IWebElement> emails = driver.FindElements(By.CssSelector("#content > a"));
+                    string allEmails = "";
+                    foreach (IWebElement item in emails)
+                    {
+                        allEmails += item.Text + "\r\n";
+                    }
+                    return new ContactData()
+                    {
+                        Home = homePhone,
+                        Mobile = mobilePhone,
+                        Work = workPhone,
+                        Phone2 = secondaryPhone,
+                        AllEmails = allEmails.Trim(),
+                        FMLAddress = fmlAddress
+                    };
+                }*/
 
         public ContactData GetContactInformationFromViewPage(int index)
         {
             manager.Navigation.OpenHomePage();
             ViewContactByIndex(index);
-            string text = driver.FindElement(By.Id("content")).Text;
-            string fmlAddress = new Regex(@"^.*H:", RegexOptions.Singleline).Match(text).Value.Replace("H:", "");
-            string homePhone = new Regex(@"H: (.*)").Match(text).Groups[1].Value.Trim();
-            string mobilePhone = new Regex(@"M: (.*)").Match(text).Groups[1].Value.Trim();
-            string workPhone = new Regex(@"W: (.*)").Match(text).Groups[1].Value.Trim();
-            string secondaryPhone = new Regex(@"P: (.*)").Match(text).Groups[1].Value.Trim();
-            IList<IWebElement> emails = driver.FindElements(By.CssSelector("#content > a"));
-            string allEmails = ""; 
-            foreach (IWebElement item in emails)
-            {
-                allEmails += item.Text + "\r\n";
-            }
+            string text = driver.FindElement(By.Id("content")).Text.Trim();
             return new ContactData()
             {
-                Home = homePhone,
-                Mobile = mobilePhone,
-                Work = workPhone,
-                Phone2 = secondaryPhone,
-                AllEmails = allEmails.Trim(),
-                FMLAddress = fmlAddress
+                ContactDetails = text
             };
         }
 
@@ -197,6 +381,7 @@ namespace WebAddressbookTests
             Type(By.Name("home"), contact.Home);
             Type(By.Name("mobile"), contact.Mobile);
             Type(By.Name("work"), contact.Work);
+            Type(By.Name("fax"), contact.Fax);
             Type(By.Name("email"), contact.Email);
             Type(By.Name("email2"), contact.Email2);
             Type(By.Name("email3"), contact.Email3);
