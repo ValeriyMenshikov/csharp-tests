@@ -15,6 +15,12 @@ namespace WebAddressbookTests
         {
             List<GroupData> groups = new List<GroupData>();
 
+            groups.Add(new GroupData("data1")
+            {
+                Header = "data2",
+                Footer = "data23"
+            });
+
             for (int i = 0; i < 5; i++)
             {
                 groups.Add(new GroupData(GenerateRandomString(30)) 
