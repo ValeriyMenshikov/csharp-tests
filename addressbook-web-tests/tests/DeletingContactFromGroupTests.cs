@@ -5,36 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace WebAddressbookTests
+namespace WebAddressbookTests 
 {
     [TestFixture]
-    public class AddingContactToGroupTests : AuthTestBase
+    public class DeletingContactFromGroupTests : AuthTestBase
     {
         [Test]
-        public void TestAddingContactToGroup()
-        {
-            GroupData group = GroupData.GetAll()[0];
-            List<ContactData> oldList = group.GetContacts();
-            ContactData contact = ContactData.GetAll().Except(oldList).First();
-            app.Contact.AddContactToGroup(contact, group);
-
-            List<ContactData> newList = group.GetContacts();
-            oldList.Add(contact);
-            oldList.Sort();
-            newList.Sort();
-            Assert.AreEqual(oldList, newList);
-        }
-
-        [Test]
-        public void TestAddingContactToGroup2()
+        public void DeleteContactFromGroupTest()
         {
             List<GroupData> groups = GroupData.GetAll();
             List<ContactData> contacts = ContactData.GetAll();
 
             if (groups.Count() == 0)
             {
-                app.Group.Create(new GroupData("GroupName")
-                {
+                app.Group.Create(new GroupData("GroupName") {
                     Header = "Header",
                     Footer = "Footer"
                 });
@@ -51,15 +35,23 @@ namespace WebAddressbookTests
                 contacts = ContactData.GetAll();
             }
 
-            ContactData contact = contacts[0];
             GroupData group = groups[0];
 
             List<ContactData> oldList = group.GetContacts();
 
-            app.Contact.AddContactToGroup(contact, group);
+            if (oldList.Count == 0)
+            {
+                ContactData freeContact = contacts.Except(oldList).First();
+                app.Contact.AddContactToGroup(freeContact, group);
+                oldList = group.GetContacts();
+            }
+
+            ContactData contact = oldList[0];
+
+            app.Contact.RemoveFromGroup(contact, group);
 
             List<ContactData> newList = group.GetContacts();
-            oldList.Add(contact);
+            oldList.Remove(contact);
             oldList.Sort();
             newList.Sort();
             Assert.AreEqual(oldList, newList);

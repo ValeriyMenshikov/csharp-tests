@@ -128,6 +128,7 @@
     <Compile Include="tests\AuthTestBase.cs" />
     <Compile Include="tests\ContactInformationTests.cs" />
     <Compile Include="tests\ContactTestBase.cs" />
+    <Compile Include="tests\DeletingContactFromGroupTests.cs" />
     <Compile Include="tests\GroupTestBase.cs" />
     <Compile Include="tests\LoginTests.cs" />
     <Compile Include="tests\SearchTests.cs" />

@@ -108,6 +108,7 @@ namespace WebAddressbookTests
             };
         }
 
+
         private static string CleanAndConcat(string firstName,
                                             string middleName,
                                             string lastName,
@@ -464,6 +465,22 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper RemoveFromGroup(ContactData contact, GroupData group)
+        {
+            manager.Navigation.OpenHomePage();
+            SelectGroupFilter(group);
+            SelectContact(contact.Id);
+            SubmitContactRemoveFromGroup();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
+            manager.Navigation.OpenHomePage();
+            return this;
+        }
+
+        private void SubmitContactRemoveFromGroup()
+        {
+            driver.FindElement(By.Name("remove")).Click();
+        }
+
         private void CommitAddingContactToGroup()
         {
             driver.FindElement(By.Name("add")).Click();
@@ -482,6 +499,11 @@ namespace WebAddressbookTests
         private void ClearGroupFilter()
         {
             new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
+        }
+
+        private void SelectGroupFilter(GroupData group)
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByValue(group.Id);
         }
     }
 }
