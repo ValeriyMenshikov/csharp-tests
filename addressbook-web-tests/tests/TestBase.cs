@@ -11,6 +11,8 @@ namespace WebAddressbookTests
     {
 
         protected ApplicationManager app;
+        public static bool PERFORM_GROUP_LONG_UI_CHECKS = false;
+        public static bool PERFORM_CONTACT_LONG_UI_CHECKS = false;
 
         [SetUp]
         public void SetupApplicationManager()

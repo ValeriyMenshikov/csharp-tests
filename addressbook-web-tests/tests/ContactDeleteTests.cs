@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class ContactDeleteTests : AuthTestBase
+    public class ContactDeleteTests : ContactTestBase
     {
         [Test]
         public void ContactDeleteTest()
@@ -17,11 +17,11 @@ namespace WebAddressbookTests
                 ContactData contact = new ContactData("firstname", "middlename");
                 app.Contact.Create(contact);
             }
-            List<ContactData> oldContacts = app.Contact.GetContactList();
-            ContactData toBeRemoved = oldContacts[0];
-            app.Contact.DeleteByIndex(index);
+            List<ContactData> oldContacts = ContactData.GetAll();
+            ContactData toBeRemoved = oldContacts[index];
+            app.Contact.Delete(toBeRemoved);
             Assert.AreEqual(oldContacts.Count - 1, app.Contact.GetContactsCount());
-            List<ContactData> newContacts = app.Contact.GetContactList();
+            List<ContactData> newContacts = ContactData.GetAll();
             oldContacts.RemoveAt(index);
             oldContacts.Sort();
             newContacts.Sort();

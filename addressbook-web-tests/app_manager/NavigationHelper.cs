@@ -37,7 +37,7 @@ namespace WebAddressbookTests
 
         public void OpenGroupPage()
         {
-            if (driver.Url == baseURL + "/group.php" && IsElementPresent(By.Name("new")))
+            if (driver.Url == baseURL + "group.php" && IsElementPresent(By.Name("new")))
             {
                 return;
             }

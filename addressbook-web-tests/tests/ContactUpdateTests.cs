@@ -5,10 +5,10 @@ using NUnit.Framework;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class ContactUpdateTests : AuthTestBase
+    public class ContactUpdateTests : ContactTestBase
     {
         [Test]
-        public void ContactUpdateByIndexTest()
+        public void ContactUpdateTest()
         {
             int index = 0;
             if (! app.Contact.CheckContacts())
@@ -17,26 +17,26 @@ namespace WebAddressbookTests
             }
             ContactData contact = new ContactData("Петя", "Сергеевич", "Петров");
             
-            List<ContactData> oldContacts = app.Contact.GetContactList();
-            
-            ContactData oldData = oldContacts[index];
+            List<ContactData> oldContacts = ContactData.GetAll();
 
-            app.Contact.UpdateByIndex(contact, index);
+            ContactData contactToBeEdit = oldContacts[index];
+
+            app.Contact.Update(contactToBeEdit, contact);
             
             Assert.AreEqual(oldContacts.Count, app.Contact.GetContactsCount());
 
-            List<ContactData> newContacts = app.Contact.GetContactList();
+            List<ContactData> newContacts = ContactData.GetAll();
 
-            oldContacts[index].Firstname = contact.Firstname;
-            oldContacts[index].Middlename = contact.Middlename;
-            oldContacts[index].Lastname = contact.Lastname;
+            contactToBeEdit.Firstname = contact.Firstname;
+            contactToBeEdit.Middlename = contact.Middlename;
+            contactToBeEdit.Lastname = contact.Lastname;
             oldContacts.Sort();
             newContacts.Sort();
 
             Assert.AreEqual(oldContacts, newContacts);
             foreach (ContactData g in newContacts)
             {
-                if (g.Id == oldData.Id)
+                if (g.Id == contactToBeEdit.Id)
                 {
                     Assert.AreEqual(g.Firstname, contact.Firstname);
                     Assert.AreEqual(g.Lastname, contact.Lastname);

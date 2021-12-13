@@ -39,9 +39,8 @@ namespace WebAddressbookTests
         public GroupHelper UpdateByIndex(GroupData group, int index)
         {
             manager.Navigation.OpenGroupPage();
-            index += 5;
-            driver.FindElement(By.CssSelector(String.Format("span:nth-child({0}) > input[type=checkbox]", index))).Click();
-            driver.FindElement(By.CssSelector("input[type=submit]:nth-child(3)")).Click();
+            SelectGroup(index);
+            InitGroupEdit();
             FillGroupForm(group);
             SubmitGroupUpdate();
             ReturnToGroupsPage();
@@ -49,9 +48,26 @@ namespace WebAddressbookTests
 
         }
 
+        public GroupHelper Update(GroupData group, GroupData data)
+        {
+            manager.Navigation.OpenGroupPage();
+            SelectGroup(group.Id);
+            InitGroupEdit();
+            FillGroupForm(data);
+            SubmitGroupUpdate();
+            ReturnToGroupsPage();
+            return this;
+        }
+
+        private void InitGroupEdit()
+        {
+            driver.FindElement(By.CssSelector("input[type=submit]:nth-child(3)")).Click();
+        }
+
         public void SubmitGroupUpdate()
         {
             driver.FindElement(By.Name("update")).Click();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
             groupCache = null;
         }
 
@@ -63,8 +79,29 @@ namespace WebAddressbookTests
         public GroupHelper DeleteByIndex(int index)
         {
             manager.Navigation.OpenGroupPage();
+            SelectGroup(index);
+            SubmitGroupDelete();
+            ReturnToGroupsPage();
+            return this;
+        }
+
+        public GroupHelper SelectGroup(int index)
+        {
             index += 5;
             driver.FindElement(By.CssSelector(String.Format("span:nth-child({0}) > input[type=checkbox]", index))).Click();
+            return this;
+        }
+
+        public GroupHelper SelectGroup(string id)
+        {
+            driver.FindElement(By.XPath(String.Format("(//input[@name='selected[]' and @value='{0}'])", id))).Click();
+            return this;
+        }
+
+        public GroupHelper Remove(GroupData group)
+        {
+            manager.Navigation.OpenGroupPage();
+            SelectGroup(group.Id);
             SubmitGroupDelete();
             ReturnToGroupsPage();
             return this;

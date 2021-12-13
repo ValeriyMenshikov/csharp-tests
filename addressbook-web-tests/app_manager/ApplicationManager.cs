@@ -52,7 +52,7 @@ namespace WebAddressbookTests
         {
             driver = new ChromeDriver();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
-            baseURL = "http://localhost/addressbook";
+            baseURL = "http://localhost/addressbook/";
 
             loginHelper = new LoginHelper(this);
             groupHelper = new GroupHelper(this);

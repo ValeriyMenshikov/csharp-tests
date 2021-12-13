@@ -5,13 +5,13 @@ using NUnit.Framework;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class GroudUpdateTests : AuthTestBase
+    public class GroudUpdateTests : GroupTestBase
     {
         [Test]
         public void GroupUpdateTest()
         {
-            GroupData group = new GroupData("group");
-            group.Header = "group1";
+            GroupData group = new GroupData("group3");
+            group.Header = "group2";
             group.Footer = "group1";
 
             if (! app.Group.CheckGroups())
@@ -20,18 +20,18 @@ namespace WebAddressbookTests
             }
 
             int index = 0;
-            List<GroupData> oldGroups = app.Group.GetGroupList();
-            GroupData oldData = oldGroups[index];
-            app.Group.UpdateByIndex(group, index);
+            List<GroupData> oldGroups = GroupData.GetAll();
+            GroupData groupToBeUpdate = oldGroups[index];
+            app.Group.Update(groupToBeUpdate, group);
             Assert.AreEqual(oldGroups.Count, app.Group.GetGroupsCount());
-            List<GroupData> newGroups = app.Group.GetGroupList();
-            oldGroups[index].Name = group.Name;
+            List<GroupData> newGroups = GroupData.GetAll();
+            groupToBeUpdate.Name = group.Name;
             oldGroups.Sort();
             newGroups.Sort();
             Assert.AreEqual(oldGroups, newGroups);
             foreach (GroupData g in newGroups)
             {
-                if (g.Id == oldData.Id)
+                if (g.Id == groupToBeUpdate.Id)
                 {
                     Assert.AreEqual(group.Name, g.Name);
                 }
