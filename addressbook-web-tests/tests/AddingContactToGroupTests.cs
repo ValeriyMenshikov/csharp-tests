@@ -13,21 +13,6 @@ namespace WebAddressbookTests
         [Test]
         public void TestAddingContactToGroup()
         {
-            GroupData group = GroupData.GetAll()[0];
-            List<ContactData> oldList = group.GetContacts();
-            ContactData contact = ContactData.GetAll().Except(oldList).First();
-            app.Contact.AddContactToGroup(contact, group);
-
-            List<ContactData> newList = group.GetContacts();
-            oldList.Add(contact);
-            oldList.Sort();
-            newList.Sort();
-            Assert.AreEqual(oldList, newList);
-        }
-
-        [Test]
-        public void TestAddingContactToGroup2()
-        {
             List<GroupData> groups = GroupData.GetAll();
             List<ContactData> contacts = ContactData.GetAll();
 
@@ -51,10 +36,11 @@ namespace WebAddressbookTests
                 contacts = ContactData.GetAll();
             }
 
-            ContactData contact = contacts[0];
             GroupData group = groups[0];
 
             List<ContactData> oldList = group.GetContacts();
+
+            ContactData contact = ContactData.GetAll().Except(oldList).First();
 
             app.Contact.AddContactToGroup(contact, group);
 
