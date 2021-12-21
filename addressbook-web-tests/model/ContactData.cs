@@ -139,19 +139,7 @@ namespace WebAddressbookTests
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(Email))
-                    {
-                        allEmails += "\r\n" + Email;
-                    }
-                    if (!string.IsNullOrEmpty(Email2))
-                    {
-                        allEmails += "\r\n" + Email2;
-                    }
-                    if (!string.IsNullOrEmpty(Email3))
-                    {
-                        allEmails += "\r\n" + Email3;
-                    }
-                    return AllEmails.Trim();
+                    return (CleanUpEmail(Email) + CleanUpEmail(Email2) + CleanUpEmail(Email3)).Trim();
                 }
             }
             set
@@ -179,6 +167,15 @@ namespace WebAddressbookTests
             }
         }
 
+
+        private string CleanUpEmail(string email)
+        {
+            if (!string.IsNullOrEmpty(email))
+            {
+                return "";
+            }
+            return email + "\r\n";
+        }
 
         private string CleanUp(string value)
         {
