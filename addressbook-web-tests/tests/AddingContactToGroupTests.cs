@@ -20,18 +20,18 @@ namespace WebAddressbookTests
             {
                 app.Group.Create(new GroupData("GroupName")
                 {
-                    Header = "Header",
-                    Footer = "Footer"
+                    Header = GenerateRandomString(6),
+                    Footer = GenerateRandomString(6)
                 });
                 groups = GroupData.GetAll();
             }
 
             if (contacts.Count() == 0)
             {
-                app.Contact.Create(new ContactData("ContactName")
+                app.Contact.Create(new ContactData(GenerateRandomString(6))
                 {
-                    Lastname = "LastName",
-                    Middlename = "Middlename"
+                    Lastname = GenerateRandomString(6),
+                    Middlename = GenerateRandomString(6)
                 });
                 contacts = ContactData.GetAll();
             }
@@ -40,7 +40,22 @@ namespace WebAddressbookTests
 
             List<ContactData> oldList = group.GetContacts();
 
+            if (ContactData.GetAll().Except(oldList).Count() == 0)
+            {
+                app.Contact.Create(new ContactData(GenerateRandomString(6))
+                {
+                    Lastname = GenerateRandomString(6),
+                    Middlename = GenerateRandomString(6)
+                });
+            }
             ContactData contact = ContactData.GetAll().Except(oldList).First();
+
+
+            if (oldList.Contains(contact))
+            {
+                app.Contact.RemoveFromGroup(contact, group);
+                contact = ContactData.GetAll().Except(oldList).First();
+            }
 
             app.Contact.AddContactToGroup(contact, group);
 
